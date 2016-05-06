@@ -1,0 +1,46 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="todos-list">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <header>
+            <h1>Todo List</h1>
+        </header>
+
+        <ul>
+          <template is="dom-repeat" items="[[todos]]" as="todo">
+            <li>
+                {{todo.text}}
+            </li>
+          </template>
+        </ul>
+    </template>
+    <script>
+        (function() {
+            'use strict';
+
+            Polymer({
+                is: 'todos-list',
+
+                properties: {
+                    todos: {
+                        type: Array,
+                        value: () => [{
+                            text: 'This is task 1'
+                        }, {
+                            text: 'This is task 2'
+                        }, {
+                            text: 'This is task 3'
+                        }]
+                    }
+
+                }
+
+            });
+        })();
+    </script>
+</dom-module>
