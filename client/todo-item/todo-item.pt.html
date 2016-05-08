@@ -1,0 +1,93 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="todo-item">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            .delete {
+                float: right;
+                font-weight: bold;
+                background: none;
+                font-size: 1em;
+                border: none;
+                position: relative;
+            }
+
+            .text {
+                margin-left: 10px;
+            }
+
+            .checked {
+                color: #888;
+            }
+
+            .checked .text {
+                text-decoration: line-through;
+            }
+
+            .private {
+                background: #eee;
+                border-color: #ddd;
+            }
+
+            .toggle-private {
+                margin-left: 5px;
+            }
+        </style>
+
+        <div class$="{{_checkedClass(todo.checked)}}">
+            <paper-icon-button class="delete" icon="delete" on-tap="_onDelete"></paper-icon-button>
+
+            <paper-checkbox checked="[[todo.checked]]" on-tap="_setChecked" class="toggle-checked"></paper-checkbox>
+
+            <span class="text">
+            {{todo.text}}
+        </span>
+        </div>
+    </template>
+
+    <script>
+        (function() {
+            'use strict';
+
+            Polymer({
+                is: 'todo-item',
+
+                properties: {
+                    todo: {
+                        type: Object
+                    }
+
+                },
+                ready() {
+
+                },
+                _onDelete() {
+                    // console.log('firing delete-todo')
+                    this.fire('delete-todo', {
+                        todo: this.todo
+                    });
+                },
+                _setChecked() {
+
+                    this.fire('check-todo', {
+                        todo: this.todo
+                    })
+                },
+                _checkedClass(checked) {
+                    if (checked) {
+                        return 'checked';
+                    }
+                    return '';
+                }
+
+            });
+        })();
+    </script>
+</dom-module>
