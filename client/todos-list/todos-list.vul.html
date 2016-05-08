@@ -1,5 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
 <link rel="import" href="../bower_components/polyteor-element/polyteor-collection.html">
+
+
 
 
 <dom-module id="todos-list">
@@ -115,12 +120,17 @@
                 }
             }
         </style>
-        <polyteor-collection collection="tasks" data="{{todos}}"></polyteor-collection>
+        <polyteor-collection collection="tasks" data="{{todos}}" sort="[[sort]]"></polyteor-collection>
         <div class="container">
             <header>
                 <h1>Todo List</h1>
             </header>
 
+            <form is="iron-form" id="form" class="new-task" novalidate>
+                <paper-input required   error-message="Invalid task name!" pattern="[a-zA-Z][a-zA-Z0-9]{0,19}" type="text" name="text" placeholder="Type to add new tasks">
+                </paper-input>
+
+            </form>
 
             <ul>
                 <template is="dom-repeat" items="[[todos]]" as="todo">
@@ -139,8 +149,30 @@
                 is: 'todos-list',
 
                 properties: {
-                    todos: Array
+                    todos: Array,
+                    sort: {
+                        type: Object,
+                        value: {
+                            createdAt: -1
+                        },
+                        notify: true
+                    },
+                },
+                ready() {
+                    this.$.form.addEventListener('iron-form-presubmit', (event) => {
+                        event.preventDefault(); // To prevent default form submission
+                        if(!this.$.form.validate()){
+                          return;  // We abort because the form is invalid
+                        }
 
+                        let val = this.$.form.serialize(); // keys are name attributes of form elements.
+                        val.createdAt = new Date();
+                        Tasks.insert(val);
+
+                        // Clear the form
+                        this.$.form.reset();
+
+                    });
                 }
 
             });

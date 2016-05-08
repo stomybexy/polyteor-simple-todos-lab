@@ -1,2 +1,5 @@
+import {
+    Tasks as TasksColl
+} from '../imports/api/tasks';
 
-import '../imports/api/tasks';
+Tasks = TasksColl;

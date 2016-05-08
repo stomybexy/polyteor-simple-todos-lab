@@ -1,0 +1,11 @@
+{
+  "name": "simple-todos",
+  "private": true,
+  "dependencies": {
+    "iron-form": "PolymerElements/iron-form#^1.0.16",
+    "polyteor-element": "stomybexy/polyteor-element#^0.0.2",
+    "iron-input": "PolymerElements/iron-input#^1.0.10",
+    "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^1.0.1",
+    "paper-input": "PolymerElements/paper-input#^1.1.11"
+  }
+}
