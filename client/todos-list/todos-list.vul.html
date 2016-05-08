@@ -123,10 +123,16 @@
                 }
             }
         </style>
-        <polyteor-collection collection="tasks" data="{{todos}}" sort="[[sort]]"></polyteor-collection>
+        <polyteor-collection collection="tasks" selector="[[selector]]" data="{{todos}}" sort="[[sort]]"></polyteor-collection>
+        <polyteor-collection collection="tasks" selector='{"checked": {"$ne":true}}' data="{{incompletedTodos}}"></polyteor-collection>
         <div class="container">
             <header>
-                <h1>Todo List</h1>
+                <h1>Todo List ({{incompletedTodos.length}})</h1>
+
+                <label class="hide-completed">
+                    <paper-checkbox checked="{{hideCompleted}}"></paper-checkbox>
+                    Hide Completed Tasks
+                </label>
             </header>
 
             <form is="iron-form" id="form" class="new-task" novalidate>
@@ -162,6 +168,16 @@
                         },
                         notify: true
                     },
+                    hideCompleted: {
+                        type: Boolean,
+                        value: false,
+                        notify: true
+                    },
+                    selector: {
+                        type: Object,
+                        computed: '_filterData(hideCompleted)'
+                    }
+
                 },
                 ready() {
                     this.$.form.addEventListener('iron-form-presubmit', (event) => {
@@ -189,6 +205,16 @@
                             checked: !todo.checked
                         }
                     })
+                },
+                _filterData(hide) {
+                    if (hide) {
+                        return {
+                            checked: {
+                                $ne: true
+                            }
+                        };
+                    }
+                    return {};
                 }
 
             });
