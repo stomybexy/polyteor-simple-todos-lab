@@ -192,11 +192,9 @@
 
                         let val = this.$.form.serialize(); // keys are name attributes of form elements.
 
-                        val.createdAt = new Date();
-                        val.owner = Meteor.userId();
-                        val.username = Meteor.user().username;
 
-                        Tasks.insert(val);
+                        // Call tasks.insert method
+                        Meteor.call('tasks.insert', val.text);
 
                         // Clear the form
                         this.$.form.reset();
@@ -204,15 +202,13 @@
                     });
                 },
                 deleteTodo(e) {
-                    Tasks.remove(e.detail.todo._id);
+                    // Call tasks.remove method
+                    Meteor.call('tasks.remove', e.detail.todo._id);
                 },
                 setChecked(e) {
                     let todo = e.detail.todo;
-                    Tasks.update(todo._id, {
-                        $set: {
-                            checked: !todo.checked
-                        }
-                    })
+                    // Call tasks.setChecked method
+                    Meteor.call('tasks.setChecked', todo._id, !todo.checked);
                 },
                 _filterData(hide) {
                     if (hide) {
