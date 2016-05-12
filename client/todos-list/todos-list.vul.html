@@ -5,6 +5,8 @@
 <link rel="import" href="../bower_components/polyteor-element/polyteor-collection.html">
 
 <link rel="import" href="../todo-item/todo-item.pt.html">
+<link rel="import" href="../todo-auth/todo-auth.pt.html">
+
 
 
 
@@ -126,6 +128,8 @@
         <polyteor-collection collection="tasks" selector="[[selector]]" data="{{todos}}" sort="[[sort]]"></polyteor-collection>
         <polyteor-collection collection="tasks" selector='{"checked": {"$ne":true}}' data="{{incompletedTodos}}"></polyteor-collection>
         <div class="container">
+            <todo-auth user="{{user}}"></todo-auth>
+
             <header>
                 <h1>Todo List ({{incompletedTodos.length}})</h1>
 
@@ -135,7 +139,7 @@
                 </label>
             </header>
 
-            <form is="iron-form" id="form" class="new-task" novalidate>
+            <form is="iron-form" id="form" class="new-task" novalidate hidden$="[[!user]]">
                 <paper-input required error-message="Invalid task name!" pattern="[a-zA-Z][a-zA-Z0-9]{0,19}" type="text" name="text" placeholder="Type to add new tasks">
                 </paper-input>
 
@@ -187,7 +191,11 @@
                         }
 
                         let val = this.$.form.serialize(); // keys are name attributes of form elements.
+
                         val.createdAt = new Date();
+                        val.owner = Meteor.userId();
+                        val.username = Meteor.user().username;
+
                         Tasks.insert(val);
 
                         // Clear the form

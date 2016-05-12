@@ -1,0 +1,98 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/polyteor-auth/polyteor-user.html">
+
+
+<dom-module id="todo-auth">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <polyteor-user user="{{user}}"></polyteor-user>
+
+        <paper-icon-button icon="account-circle" on-tap="signInOut"></paper-icon-button>
+        <label hidden$="[[!user]]">{{user.username}}</label>
+
+
+        <paper-dialog id="loginDialog" modal>
+            <form is='iron-form' id="form">
+                <h2>Please sign in</h2>
+
+                <paper-input id="username" required autofocus type="text" name="username" label="username or email"></paper-input>
+                <paper-input id="password" required label="password" type="password" name="password"></paper-input>
+
+                <div>
+                    <div>
+
+                        <paper-button raised on-tap="signIn">
+                            <!-- <iron-icon icon="account-box"></iron-icon> -->
+                            Sign in
+                        </paper-button>
+                        <paper-button raised on-tap="register">
+                            <!-- <iron-icon icon="account-box"></iron-icon> -->
+                            Register
+                        </paper-button>
+                        <paper-button raised on-tap="_cancel">
+                            <!-- <iron-icon icon="account-box"></iron-icon> -->
+                            Cancel
+                        </paper-button>
+
+                    </div>
+                </div>
+            </form>
+        </paper-dialog>
+    </template>
+    <script>
+        (function() {
+            'use strict';
+
+            Polymer({
+                is: 'todo-auth',
+                properties: {
+                    user: {
+                        type: Object,
+                        notify: true
+                    }
+                },
+                signInOut() {
+                    if (!Meteor.userId()) {
+                        this.$.loginDialog.open();
+                    } else {
+                        Meteor.logout();
+                    }
+                },
+                signIn() {
+                    let user = this.$.form.serialize();
+                    Meteor.loginWithPassword(user.username, user.password, (err, res) => {
+                        if (!err) {
+                            this.$.form.reset();
+                            this.$.loginDialog.close();
+                        }
+                    });
+                },
+                register() {
+                    let user = this.$.form.serialize();
+                    Accounts.createUser({
+                        username: user.username,
+                        password: user.password
+                    }, (err, res) => {
+                        if (!err) {
+                            this.$.form.reset();
+                            this.$.loginDialog.close();
+                        }
+                    })
+                },
+                _cancel() {
+                    this.$.form.reset();
+                    this.$.loginDialog.close();
+                }
+            });
+        })();
+    </script>
+</dom-module>
