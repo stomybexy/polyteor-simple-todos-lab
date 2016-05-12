@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 
-<link rel="import" href="../bower_components/polyteor-element/polyteor-collection.html">
+<link rel="import" href="../bower_components/polyteor-element/polyteor-subscription.html">
 
 <link rel="import" href="../todo-item/todo-item.pt.html">
 <link rel="import" href="../todo-auth/todo-auth.pt.html">
@@ -125,7 +125,7 @@
                 }
             }
         </style>
-        <polyteor-collection collection="tasks" selector="[[selector]]" data="{{todos}}" sort="[[sort]]"></polyteor-collection>
+        <polyteor-subscription name="tasks" data="{{todos}}"></polyteor-subscription>
         <polyteor-collection collection="tasks" selector='{"checked": {"$ne":true}}' data="{{incompletedTodos}}"></polyteor-collection>
         <div class="container">
             <todo-auth user="{{user}}"></todo-auth>

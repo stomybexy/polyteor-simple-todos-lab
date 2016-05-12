@@ -4,6 +4,16 @@ import { Meteor } from 'meteor/meteor';
 
  export const Tasks = new Mongo.Collection('tasks');
 
+ SmartPub.smartPublish('tasks', () =>{
+   return {
+     selector: {}, // Mongo selector object to filter data
+     coll: Tasks, // The collection we want to publish
+     sort: { // sort specifier.
+       createdAt: -1
+     }
+   }
+ });
+
  Meteor.methods({
    'tasks.insert' (text) {
      check(text, String);
